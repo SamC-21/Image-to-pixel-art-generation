@@ -1,0 +1,48 @@
+import os
+import cv2  # Import OpenCV
+# Defines the datasets in a dictionary
+# future datasets can be added here
+DATASETS = {
+    "1": {
+        "name": "Anime Faces",
+        "path": r"C:\Users\Sam\DatasetsDiss\DatasetFaces\images"
+    },
+    "2": {
+        "name": "Landscapes",
+        "path": r"C:\Users\Sam\DatasetsDiss\DatasetLandscapes" # Change this to your second path
+    }
+}
+
+#choice for which dataset to use 
+print("Select Dataset ---")
+for key, info in DATASETS.items():
+    print(f"[{key}] {info['name']} ({info['path']})")
+
+ds_choice = input("\nSelect dataset number: ")
+
+if ds_choice not in DATASETS:
+    print("Invalid selection.")
+    exit()
+
+selected_path = DATASETS[ds_choice]['path']
+# valid list of image file extensions
+valid_exts = ('.png', '.jpg', '.jpeg', '.bmp')
+
+files = [f for f in os.listdir(selected_path)]
+
+print(f"\n--- {DATASETS[ds_choice]['name']} contains {len(files)} images ---")
+#any invalid option causes trhe program to exit
+img_choice = input("\nEnter index number to process (or 'q' to quit): ")
+#selects the file based on user input from the list
+if img_choice.isdigit() and int(img_choice) < len(files):
+    filename = files[int(img_choice)] 
+    full_path = os.path.join(selected_path, filename)# Full path to the selected file
+    
+    # Process the selected file
+    img = cv2.imread(full_path) 
+    if img is not None:
+        output = cv2.resize(img, (32, 32), interpolation=cv2.INTER_NEAREST)
+        cv2.imwrite("output.png", output) 
+        print(f"\nSuccessfully processed {filename} and saved as output.png")
+    else:
+        print("Could not read image file.")
