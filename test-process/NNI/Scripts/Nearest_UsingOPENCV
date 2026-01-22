@@ -2,6 +2,17 @@ import os
 import cv2  # Import OpenCV
 # Defines the datasets in a dictionary
 # future datasets can be added here
+
+def process_image(img, method_name="bilinear"):
+    methods = {
+        "1": ("Nearest", cv2.INTER_NEAREST),
+        "2": ("Bilinear", cv2.INTER_LINEAR),
+        "3": ("Bicubic", cv2.INTER_CUBIC)
+    }
+    # defaults to bilinear if invalid choice
+    name, flag = methods.get(method_name, ("Bilinear", cv2.INTER_LINEAR))
+    return cv2.resize(img, (32, 32), interpolation=flag), name
+
 DATASETS = {
     "1": {
         "name": "Anime Faces",
@@ -34,15 +45,19 @@ print(f"\n--- {DATASETS[ds_choice]['name']} contains {len(files)} images ---")
 #any invalid option causes trhe program to exit
 img_choice = input("\nEnter index number to process (or 'q' to quit): ")
 #selects the file based on user input from the list
+
+
 if img_choice.isdigit() and int(img_choice) < len(files):
-    filename = files[int(img_choice)] 
-    full_path = os.path.join(selected_path, filename)# Full path to the selected file
+    # 4. Choose Interpolation
+    print("\n[1] Nearest  [2] Bilinear  [3] Bicubic")
+    m_choice = input("Select method: ")
     
-    # Process the selected file
-    img = cv2.imread(full_path) 
+    full_path = os.path.join(selected_path, files[int(img_choice)])
+    img = cv2.imread(full_path)
+    # saves the out put and labels the method used
     if img is not None:
-        output = cv2.resize(img, (32, 32), interpolation=cv2.INTER_NEAREST)
-        cv2.imwrite("output.png", output) 
-        print(f"\nSuccessfully processed {filename} and saved as output.png")
+        output, method_used = process_image(img, m_choice)
+        cv2.imwrite(f"output_{method_used.lower()}.png", output)
+        print(f"\nSaved using {method_used} interpolation.")
     else:
-        print("Could not read image file.")
+        print("Error: Could not read image.")
