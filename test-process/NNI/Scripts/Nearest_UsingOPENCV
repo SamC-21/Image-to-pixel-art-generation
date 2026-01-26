@@ -20,7 +20,7 @@ DATASETS = {
     },
     "2": {
         "name": "Landscapes",
-        "path": r"C:\Users\Sam\DatasetsDiss\DatasetLandscapes" # Change this to your second path
+        "path": r"C:\Users\Sam\DatasetsDiss\DatasetLandscapes" 
     }
 }
 
@@ -48,7 +48,7 @@ img_choice = input("\nEnter index number to process (or 'q' to quit): ")
 
 
 if img_choice.isdigit() and int(img_choice) < len(files):
-    # 4. Choose Interpolation
+    # choose Interpolation
     print("\n[1] Nearest  [2] Bilinear  [3] Bicubic")
     m_choice = input("Select method: ")
     
